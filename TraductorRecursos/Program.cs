@@ -21,20 +21,25 @@ namespace TraductorRecursos
         {
             if (args.Length < 3)
             {
-                var oldColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Error.WriteLine("Error: Tienes que especificar los parámetros [ruta archivo .ini] [clave de autenticación] [Código idioma a traducir]");
-                Console.ForegroundColor = oldColor;
+                ComunicaError("Error: Tienes que especificar los parámetros [ruta archivo .ini] [clave de autenticación] [Código idioma a traducir]");
                 return;
             }
 
             if (!File.Exists(args[0]))
             {
-                Console.Error.WriteLine($"El archivo {args[0]} no existe");
+                ComunicaError($"El archivo {args[0]} no existe");
                 return;
             }
 
             TraduceArchivo(args[0], args[1], args[2]);
+        }
+
+        private static void ComunicaError(string mensaje)
+        {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine(mensaje);
+            Console.ForegroundColor = oldColor;
         }
 
         private static void TraduceArchivo(string rutaArchivo, string clave, string idiomaDestino)
@@ -61,7 +66,7 @@ namespace TraductorRecursos
             }
         }
 
-        public static string Traduce(string cadena, string clave, string idiomaDestino)
+        private static string Traduce(string cadena, string clave, string idiomaDestino)
         {
             var client = new RestClient("https://api.deepl.com/v2/translate");
             var request = new RestRequest(Method.POST);
